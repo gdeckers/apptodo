@@ -25,7 +25,14 @@ export const RightSide = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    a {
+
+    button {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    a, button {
         color: #FFF;
         text-decoration: none;
         font-weight: bold;

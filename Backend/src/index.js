@@ -1,13 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const server = express();
+
+server.use(cors());
+server.use(express.json());
+
 const TaskRoutes = require('./routes/TaskRoutes');
 
-
-server.use(express.json());
 server.use('/task', TaskRoutes);
 
-
-
-server.listen(3000, ()=>{
+server.listen(5000, ()=>{
     console.log('Servidor rodando...')
 });
