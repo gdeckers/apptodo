@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Button } from 'react-native'
 import styles from './styles';
 
 import logo from '../../assets/logo.png';
@@ -8,28 +8,28 @@ import qrcode from '../../assets/qrcode.png';
 import back from '../../assets/back.png';
 
 
-export default function Header({ showNotification, showBack }){
+export default function Header({ showNotification, showBack, late, pressNotification, onBack, navigation }){
     return(
         <View style={styles.header}>
 
             { showBack ?
-            <TouchableOpacity style={styles.leftIconArea}>
+            <TouchableOpacity style={styles.leftIconArea} onPress={onBack}>
+                
                 <Image source={back} style={styles.leftIconImage} />
             </TouchableOpacity>
             :
-            <TouchableOpacity style={styles.leftIconArea}>
+            <TouchableOpacity style={styles.leftIconArea} >
                 <Image source={qrcode} style={styles.leftIconImage} />
             </TouchableOpacity>
             }
 
-
             <Image style={styles.logo} source={logo}/>
             
-            { showNotification &&
-                <TouchableOpacity style={styles.notification}>
+            { showNotification && late > 0 &&
+                <TouchableOpacity style={styles.notification} onPress={pressNotification}>
                     <Image source={bell} style={styles.bell}/>
                     <View style={styles.circle}>
-                        <Text style={styles.notificationText}>3</Text>
+                        <Text style={styles.notificationText}>{late}</Text>
                     </View>
                 </TouchableOpacity>
             }

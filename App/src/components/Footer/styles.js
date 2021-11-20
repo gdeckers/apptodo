@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     footer: {
         width: '100%',
-        height: 70,
+        height: 80,
         position: 'absolute',
         bottom: 0,
         
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         position: 'absolute',
-        bottom: 10,
+        bottom: 3,
         alignSelf: 'center',
     },
     footerText: {

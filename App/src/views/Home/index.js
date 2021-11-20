@@ -1,16 +1,54 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useEffect, useState } from "react";
+import {Alert, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import styles from "./styles";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TaskCard from "../../components/TaskCard";
 
-export default function Home(){
+import api from '../../services/api';
+
+export default function Home({ navigation }){
     const [filter, setFilter] = useState('today');
+    const [tasks, setTasks] = useState([]);
+    const [load, setLoad] = useState(false);
+    const [lateCount, setLateCount] = useState();
+
+    async function loadTasks(){
+        setLoad(true);
+        await api.get(`task/filter/${filter}/11:22:33:44:55:66`).then(response => {
+            setTasks(response.data)
+            setLoad(false)
+        });
+    }
+
+    async function lateVerify(){
+        await api.get(`task/filter/late/11:22:33:44:55:66`).then(response => {
+            setLateCount(response.data.length);
+        });
+    }
+
+    function loadLate(){
+        setFilter('late');
+    }
+
+    function Novo(){
+        navigation.navigate('Task');
+        //Alert.alert('Alerta!!',"Alerta vermelho!!");
+    }
+    function Back(){
+        navigation.navigate('Home');
+        //Alert.alert('Alerta!!',"Alerta vermelho!!");
+    }
+
+    useEffect(()=>{
+        loadTasks();
+        lateVerify();
+    },[filter]);
+
     return(
         <View style={styles.container}>
-            <Header showNotification={true} showBack={false}/>
+            <Header showNotification={true} showBack={false} pressNotification={loadLate} late={lateCount} onBack={Back}/>
             
             <View style={styles.filter}>
                 <TouchableOpacity onPress={()=>setFilter('all')}>
@@ -31,16 +69,22 @@ export default function Home(){
             </View>
 
             <View style={styles.title}>
-                <Text style={styles.titleText}>TAREFAS</Text>
+                <Text style={styles.titleText}>TAREFAS {filter == 'late' && ' ATRASADAS'}</Text>
             </View>
 
             <ScrollView style={styles.content} contentContainerStyle={{alignItems: 'center'}}>
-
-                <TaskCard />
                 
+                {
+                    load ?
+                        <ActivityIndicator color={'#EE6B26'} size={50}/>
+                    :
+                        tasks.map(t => (
+                            <TaskCard done={false} title={t.title} when={t.when} type={t.type}/>
+                        ))
+                }
             </ScrollView>
 
-            <Footer icon={'add'} />
+            <Footer icon={'add'} onPresss={Novo}/>
         </View>
     )
 }
